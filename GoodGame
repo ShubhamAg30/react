@@ -1,0 +1,53 @@
+// set up react app
+npx create-react-app beer-app
+cd beer-app
+npm start
+
+
+//Fetch Data from the API
+import React, { useState, useEffect } from 'react';
+
+const BeerList = () => {
+  const [beers, setBeers] = useState([]);
+  
+  useEffect(() => {
+    fetch('https://api.punkapi.com/v2/beers')
+      .then(response => response.json())
+      .then(data => setBeers(data));
+  }, []);
+
+  return (
+    <div className="beer-list">
+      {beers.map(beer => (
+        <div key={beer.id} className="beer-card">
+          <img src={beer.image_url} alt={beer.name} />
+          <h2>{beer.name}</h2>
+          <p>{beer.tagline}</p>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default BeerList;
+
+
+//Implementing Search Functionality
+// Adding this inside the BeerList component
+const [searchTerm, setSearchTerm] = useState('');
+
+const filteredBeers = beers.filter(beer =>
+  beer.name.toLowerCase().includes(searchTerm.toLowerCase())
+);
+
+// Adding this before the return statement
+<input
+  type="text"
+  placeholder="Search by beer name"
+  value={searchTerm}
+  onChange={e => setSearchTerm(e.target.value)}
+/>
+
+{filteredBeers.map(beer => (
+  // ... rest of the code remains the same
+))}
